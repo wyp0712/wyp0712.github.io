@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Generator-async 异步编程</title>
+    <url>/2020/10/08/A-Generator-async/</url>
+    <content><![CDATA[<h1 id="高6"><a href="#高6" class="headerlink" title="高6"></a>高6</h1><h1 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h1><p>ES6 诞生以前，异步编程的方法，大概有下面四种。</p>
+<p>回调函数<br>事件监听<br>发布/订阅<br>Promise 对象</p>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2020/10/11/A-Generator/</url>
+    <content><![CDATA[<h2 id=""><a href="#" class="headerlink" title=""></a><a id="backup"></a></h2><h2 id="title-Generator-基础知识介绍"><a href="#title-Generator-基础知识介绍" class="headerlink" title="title: Generator 基础知识介绍"></a>title: Generator 基础知识介绍</h2><!-- * [1.语法示例](#1)
+
+  * [1.1图片](#1.1)
+
+  * [1.2换行](#1.2)
+
+  * [1.3强调](#1.3)
+
+<a href="#preface">简介</a>
+<a href="#application">应用</a> -->
+
+<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><h4 id="1、基本概念"><a href="#1、基本概念" class="headerlink" title="1、基本概念"></a><strong>1、<a href="#preface">基本概念</a></strong></h4><ol>
+<li><p>Generator 函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同。</p>
+</li>
+<li><p>Generator 函数有多种理解角度。语法上，首先可以把它理解成，Generator 函数是一个状态机，封装了多个内部状态。</p>
+</li>
+<li><p>执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。</p>
+</li>
+<li><p>形式上，Generator 函数是一个普通函数，但是有两个特征。一是，function关键字与函数名之间有一个星号；二是，函数体内部使用yield表达式，定义不同的内部状态（yield在英语里的意思就是“产出”）。</p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">helloWorldGenerator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&#x27;hello&#x27;</span>;</span><br><span class="line">  <span class="keyword">yield</span> <span class="string">&#x27;world&#x27;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;ending&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> hw = helloWorldGenerator();</span><br></pre></td></tr></table></figure>
+<p>上面代码定义了一个 Generator 函数helloWorldGenerator，它内部有两个yield表达式（hello和world），即该函数有三个状态：hello，world 和 return 语句（结束执行）。</p>
+<p>然后，Generator 函数的调用方法与普通函数一样，也是在函数名后面加上一对圆括号。不同的是，调用 Generator 函数后，该函数并不执行，返回的也不是函数运行结果，而是一个指向内部状态的指针对象，也就是上一章介绍的遍历器对象（Iterator Object）。</p>
+<p>下一步，必须调用遍历器对象的next方法，使得指针移向下一个状态。也就是说，每次调用next方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个yield表达式（或return语句）为止。换言之，Generator 函数是分段执行的，yield表达式是暂停执行的标记，而next方法可以恢复执行。</p>
+<p>yield 表达式</p>
+<h4 id="2、next-的参数"><a href="#2、next-的参数" class="headerlink" title="2、next 的参数"></a><strong><a href="#">2、next 的参数</a></strong></h4><h4 id="2、for…of-循环"><a href="#2、for…of-循环" class="headerlink" title="2、for…of 循环"></a><strong><a href="">2、for…of 循环</a></strong></h4><p>for…of循环可以自动遍历 Generator 函数运行时生成的Iterator对象，且此时不再需要调用next方法。</p>
+<h2 id="三、for…of-循环"><a href="#三、for…of-循环" class="headerlink" title="三、for…of 循环"></a>三、for…of 循环</h2><h2 id="四、Generator-prototype-throw"><a href="#四、Generator-prototype-throw" class="headerlink" title="四、Generator.prototype.throw()"></a>四、Generator.prototype.throw()</h2><h2 id="五、Generator-prototype-return"><a href="#五、Generator-prototype-return" class="headerlink" title="五、Generator.prototype.return()"></a>五、Generator.prototype.return()</h2><h2 id="六、next-、throw-、return-的共同点"><a href="#六、next-、throw-、return-的共同点" class="headerlink" title="六、next()、throw()、return() 的共同点"></a>六、next()、throw()、return() 的共同点</h2><h2 id="七、yield-表达式"><a href="#七、yield-表达式" class="headerlink" title="七、yield* 表达式"></a>七、yield* 表达式</h2><h2 id="八、作为对象属性的-Generator-函数"><a href="#八、作为对象属性的-Generator-函数" class="headerlink" title="八、作为对象属性的 Generator 函数"></a>八、作为对象属性的 Generator 函数</h2><h2 id="九、Generator-函数的this"><a href="#九、Generator-函数的this" class="headerlink" title="九、Generator 函数的this"></a>九、Generator 函数的this</h2><h2 id="十、含义"><a href="#十、含义" class="headerlink" title="十、含义"></a>十、含义</h2><h2 id="十一、应用"><a href="#十一、应用" class="headerlink" title="十一、应用"></a>十一、应用</h2><h2 id="1">1.语法示例</h2>
+<a href="#backup">backup</a>
+]]></content>
+  </entry>
+  <entry>
+    <title>专业高级6知识点</title>
+    <url>/2020/09/28/A-%E4%B8%93%E9%AB%986/</url>
+    <content><![CDATA[<h1 id="高6"><a href="#高6" class="headerlink" title="高6"></a>高6</h1><p>git<br>es6</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>实训二安排项目安排</title>
+    <url>/2020/10/11/A-%E5%AE%9E%E8%AE%AD%E4%BA%8C/</url>
+    <content><![CDATA[<p><code>  该项目是基于react全家桶（React、React-router-dom、redux、styled-components）开发的一套电商后台管理系统</code></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>事件循环 Event Loop</title>
+    <url>/2020/10/23/EventLoop/</url>
+    <content><![CDATA[<p>Event Loop是什么<br>event loop是一个执行模型，在不同的地方有不同的实现。浏览器和NodeJS基于不同的技术实现了各自的Event Loop。</p>
+<p>浏览器的Event Loop是在html5的规范中明确定义。<br>NodeJS的Event Loop是基于libuv实现的。可以参考Node的官方文档以及libuv的官方文档。<br>libuv已经对Event Loop做出了实现，而HTML5规范中只是定义了浏览器中Event Loop的模型，具体的实现留给了浏览器厂商。</p>
+<p>宏队列和微队列<br>宏队列，macrotask，也叫tasks。 一些异步任务的回调会依次进入macro task queue，等待后续被调用，这些异步任务包括：</p>
+<p>setTimeout<br>setInterval<br>setImmediate (Node独有)<br>requestAnimationFrame (浏览器独有)<br>I/O  —-&gt;  input / output<br>UI rendering (浏览器独有)</p>
+<p>微队列，microtask，也叫jobs。 另一些异步任务的回调会依次进入micro task queue，等待后续被调用，这些异步任务包括：</p>
+<p>process.nextTick (Node独有) node的定时器<br>Promise<br>Object.observe<br>MutationObserver</p>
+<p>（注：这里只针对浏览器和NodeJS）</p>
+<p>1、执行全局Script同步代码，这些同步代码有一些是同步语句，有一些是异步语句（比如setTimeout等）；<br>2、全局Script代码执行完毕后，调用栈Stack会清空；<br>3、从微队列microtask queue中取出位于队首的回调任务，放入调用栈Stack中执行，执行完后microtask queue长度减1；<br>4、继续取出位于队首的任务，放入调用栈Stack中执行，以此类推，直到直到把microtask queue中的所有任务都执行完毕。注意，如果在执行microtask的过程中，又产生了microtask，那么会加入到队列的末尾，也会在这个周期被调用执行；</p>
+<p>5、microtask queue中的所有任务都执行完毕，此时microtask queue为空队列，调用栈Stack也为空；<br>6、取出宏队列macrotask queue中位于队首的任务，放入Stack中执行；<br>7、执行完毕后，调用栈Stack为空；<br>8、重复第3-7个步骤；<br>9、重复第3-7个步骤；<br>……</p>
+<p>可以看到，这就是浏览器的事件循环Event Loop<br>这里归纳3个重点：</p>
+<p>宏队列macrotask一次只从队列中取一个任务执行，执行完后就去执行微任务队列中的任务；<br>微任务队列中所有的任务都会被依次取出来执行，知道microtask queue为空；<br>图中没有画UI rendering的节点，因为这个是由浏览器自行判断决定的，但是只要执行UI rendering，它的节点是在执行完所有的microtask之后，下一个macrotask之前，紧跟着执行UI render。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">  <span class="built_in">Promise</span>.resolve()</span><br><span class="line">  .then(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>)</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">4</span>)</span><br><span class="line">  resolve(<span class="number">5</span>)</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">6</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">7</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>// 正确答案<br>1<br>4<br>7<br>5<br>2<br>3<br>6</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>, <span class="string">&#x27;1&#x27;</span>);</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>, <span class="string">&#x27;2&#x27;</span>);</span><br><span class="line">  <span class="built_in">Promise</span>.resolve()</span><br><span class="line">  .then(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>, <span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">4</span>, <span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">  resolve(<span class="number">5</span>)</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data, <span class="string">&#x27;5&#x27;</span>);</span><br><span class="line">  <span class="built_in">Promise</span>.resolve()</span><br><span class="line">  .then(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">6</span>, <span class="string">&#x27;6&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">7</span>, <span class="string">&#x27;7&#x27;</span>)</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="number">8</span>, <span class="string">&#x27;8&#x27;</span>)</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">9</span>, <span class="string">&#x27;9&#x27;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">10</span>, <span class="string">&#x27;10&#x27;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>// 正确答案<br>1<br>4<br>10<br>5<br>6<br>7<br>2<br>3<br>9<br>8</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Create-React-App 之 typescript配置</title>
+    <url>/2020/10/25/React%E4%B9%8Btypescript%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h2 id="下载按照-基于react-ts的脚手架"><a href="#下载按照-基于react-ts的脚手架" class="headerlink" title="下载按照 基于react + ts的脚手架"></a>下载按照 基于react + ts的脚手架</h2><p>npx create-react-app <project name> –tempalte typescript</p>
+<h2 id="配置别名路径："><a href="#配置别名路径：" class="headerlink" title="配置别名路径："></a>配置别名路径：</h2><ol>
+<li>webpack.config.js</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">alias: &#123;</span><br><span class="line">  <span class="string">&quot;@&quot;</span>: path.join(__dirname, <span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;/src&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>tsconfig.json</li>
+</ol>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">compilerOptions: &#123;</span><br><span class="line"> &quot;baseUrl&quot;: &quot;./&quot;,</span><br><span class="line"> &quot;paths&quot;: &#123;</span><br><span class="line">   &quot;@/*&quot;: [</span><br><span class="line">     <span class="string">&quot;src/*&quot;</span></span><br><span class="line">   ]</span><br><span class="line"> &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>如何配置修饰器写法：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// tsconfig.json</span></span><br><span class="line">compilerOptions: &#123;</span><br><span class="line">  <span class="string">&quot;experimentalDecorators&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>React 组件性能优化</title>
+    <url>/2020/10/23/React%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</url>
+    <content><![CDATA[<h2 id="问题？"><a href="#问题？" class="headerlink" title="问题？"></a>问题？</h2><ul>
+<li><ol>
+<li>父组件更新数据。引起不必要的子组件渲染</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>当在父组件中，将一个函数传入子组件的时候，如果这个函数没有执行，也会让子组件重新渲染</li>
+</ol>
+</li>
+<li>当给子组件传回调函数的时候，发现 memo不生效了？如何解决</li>
+<li></li>
+<li><ol start="3">
+<li>useMemo如果传入一个函数，要在子组件中执行，不会生效 （useMemo过度优化问题）</li>
+</ol>
+</li>
+<li></li>
+<li><ol start="4">
+<li>如何优化useMemo的书写形式？</li>
+</ol>
+</li>
+<li></li>
+<li>useCallback每次不会生成一个新的具柄吗？</li>
+<li></li>
+<li>useCallback虽然每次都会生成一个新的具柄，但是不是都会执行</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><ul>
+<li><ol>
+<li>函数组件 / class组件</li>
+</ol>
+</li>
+<li>函数组件如何优化？memo</li>
+<li><ol start="2">
+<li>useMemo 是优化什么的？优化函数/方法</li>
+</ol>
+</li>
+<li></li>
+<li><ol start="3">
+<li>在useMemo中以return 函数的形式。去将你需要执行的这个函数，返回出去就可以了</li>
+</ol>
+</li>
+<li></li>
+<li>只要在useMemo中return一个函数，那这个useMemo每次接收到的返回值就是不同的，</li>
+<li></li>
+<li><ol start="4">
+<li>useCallback优化的是useMemo的书写形式</li>
+</ol>
+</li>
+<li></li>
+</ul>
+<h2 id="优化什么"><a href="#优化什么" class="headerlink" title="优化什么"></a>优化什么</h2><p>优化的是子组件的render</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>FC: FunctionComponent 函数组件</p>
+<h2 id="类组件如何优化？"><a href="#类组件如何优化？" class="headerlink" title="类组件如何优化？"></a>类组件如何优化？</h2><ol>
+<li>生命周期优化 shouldComponentUpdate()</li>
+<li>PureComponent</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>about</title>
+    <url>/2020/09/28/about/</url>
+    <content><![CDATA[<h1 id="about"><a href="#about" class="headerlink" title="about"></a>about</h1>]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2020/10/09/css/</url>
+    <content><![CDATA[<h1 id="BFC-面试"><a href="#BFC-面试" class="headerlink" title="BFC 面试"></a>BFC 面试</h1>]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2020/10/11/index/</url>
+    <content><![CDATA[<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    width: 375px;
+    height: 665px;
+    background: #eee;
+    margin: 0px auto;
+    position: relative;
+  }
+
+  .drag {
+    width: 200px;
+    height: 100px;
+    background: red;
+    position: absolute;
+    left: 50px;
+    top: 100px;
+  }
+</style>
+
+<body>
+
+  <div class="container">
+    <div class="drag" draggable="true"></div>
+  </div>
+
+  <script>
+    console.log(1, '1');
+
+    setTimeout(() => {
+      console.log(2, '2');
+      Promise.resolve()
+        .then(() => {
+          console.log(3, '3')
+        });
+    });
+
+    new Promise((resolve, reject) => {
+      console.log(4, '4')
+      resolve(5)
+    }).then((data) => {
+      console.log(data, '5');
+
+      Promise.resolve()
+        .then(() => {
+          console.log(6, '6')
+        })
+        .then(() => {
+          console.log(7, '7')
+          setTimeout(() => {
+            console.log(8, '8')
+          });
+        });
+    })
+
+    setTimeout(() => {
+      console.log(9, '9');
+    })
+
+    console.log(10, '10');
+
+    // const container = document.querySelector('.container')
+    // const drag = document.querySelector('.drag')
+    // // console.log(container.getBoundingClientRect())
+
+    // console.log("1", drag.offsetLeft)
+    // console.log("contain:", container.offsetLeft)
+
+    // function isInViewport(element) {
+    //   var rect = element.getBoundingClientRect();
+    //   var html = document.documentElement;
+    //   //在IE中，默认坐标从(2,2)开始计算，导致最终距离比其他浏览器多出两个像素，我们需要做个兼容。
+    //   var top = document.documentElement.clientTop; // 非IE为0，IE为2
+    //   var left = document.documentElement.clientLeft;
+    //   return (
+    //     rect.top - top >= 0 &&
+    //     rect.left - left >= 0 &&
+    //     rect.bottom - top <= (window.innerHeight || html.clientHeight) &&
+    //     rect.right - left <= (window.innerWidth || html.clientWidth)
+    //   );
+    // }
+
+    // drag.addEventListener('drag', function (e) {
+    //   // console.log('top: ', e.target.clientTop)
+    //   // console.log('left: ', e.target.clientLeft)
+    //   // console.log('e:', e.target.style.marginLeft, e.target.offsetWidth / 2)
+    //   // if (e.clientX - e.target.offsetWidth / 2 === 207) {
+    //   //   console.log('e:', e.clientX)
+    //   // }
+    //   // console.log('e:', e.clientY)
+    // })
+
+
+  </script>
+</body>
+
+</html>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2020/10/08/generator/</url>
+    <content><![CDATA[<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function* gen() {
+      try {
+        yield 1;
+      } catch (e) {
+        console.log(e, '内部捕获');
+      }
+    }
+
+    var g = gen();
+    g.next()
+    g.throw(1);
+    // var g = function* () {
+    //   try {
+    //     yield;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // };
+
+    // try {
+    //   var i = g();
+    //   i.next();
+    //   // throw (new Error('error--------error'))
+    //   i.throw(new Error('出错了！'));
+    // } catch (err) {
+    //   console.log(err, 'err')
+    // }
+
+
+
+// Error: 出错了！(…)
+
+    // function* numbers() {
+    //   yield 1
+    //   yield 2
+    //   return 5
+    //   yield 4
+    // }
+
+    // let it = numbers()
+    // console.log(it.next(), 'it')
+    // console.log(it.next(), 'it')
+    // console.log(it.next(), 'it')
+    // console.log(it.next(), 'it')
+
+    /**
+     *
+     * 1. 计算圆心
+     * 2. 计算半径
+     * 3. 计算图中的中间线路
+     * 4.
+     *
+     */
+    // function wrapper(generatorFunction) {
+    //   return function (...args) {
+    //     let generatorObject = generatorFunction(...args);
+    //     generatorObject.next();
+    //     generatorObject.next('foo');
+    //     generatorObject.next('foo-three');
+    //     return generatorObject;
+    //   };
+    // }
+
+    // const wrapped = wrapper(function* () {
+    //   console.log(`First input: ${yield}`);
+    //   return 'DONE';
+    // });
+
+    // wrapped().next('hello!')
+// First input: hello!
+    // function* demo() {
+    //   let a = yield 'first'
+    //   console.log(a)
+    //   yield 'two'
+    //   yield 'three'
+    // }
+    // // yield表达式本身没有返回值，或者说总是返回undefined。
+    // // next方法可以带一个参数，该参数就会被当作上一个yield表达式的返回值。
+    // let it = demo()
+    // console.log(it.next())
+    // console.log(it.next('---'))
+    // console.log(it.next())
+    // function* foo(x) {
+    //   var y = 2 * (yield (x + 1));
+    //   console.log(y, 'y')
+    //   // var z = yield (y / 3);
+    //   // return (x + y + z);
+    // }
+
+    // var a = foo(5);
+    // console.log(a.next()) // Object{value:6, done:false}
+    // console.log(a.next(1)) // Object{value:NaN, done:false}
+    // console.log(a.next()) // Object{value:NaN, done:true}
+
+
+    // function* f() {
+    //   for (var i = 0; true; i++) {
+    //     var reset = yield i;
+    //     // console.log(reset)
+    //     console.log(i)
+    //     // if (reset) { i = -1; }
+    //   }
+    // }
+    // yield表达式本身没有返回值，或者说总是返回undefined。
+    // next方法可以带一个参数，该参数就会被当作上一个yield表达式的返回值。
+    // var g = f();
+
+    // let it = g.next() // { value: 0, done: false }
+    // let it1 = g.next('a--------') // { value: 1, done: false }
+    // let it2 = g.next(true) // { value: 0, done: false }
+
+    // console.log(it1, 'it1')
+    // console.log(it, 'it')
+    // console.log(it2, 'it2')
+
+    // function getNumber(time) {
+    //   // 在time时间之后生成一个1-100之间的随机数，并返回
+    //   return new Promise(resolve => {
+    //     setTimeout(() => {
+    //       resolve(Math.ceil(Math.random() * 100))
+    //     }, time)
+    //   })
+    // }
+    // function* reducerNumber() {
+    //   const number_1 = yield getNumber(300);
+    //   const number_2 = yield getNumber(300);
+    //   const number_3 = yield getNumber(3000);
+    //   const number_4 = yield getNumber(300);
+    //   return number_4
+    // }
+    // const o = reducerNumber();
+    // console.log(o.next())
+
+
+  </script>
+</body>
+
+</html>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2020/10/09/js/</url>
+    <content><![CDATA[<h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><ol>
+<li><p>箭头函数和普通函数的区别？</p>
+</li>
+<li><p>什么是原型？什么是原型链？</p>
+</li>
+<li><p>函数的防抖和节流？</p>
+</li>
+<li><p>http和https的区别？</p>
+</li>
+<li><p>简单介绍一下event loop?</p>
+</li>
+<li><p>说一下宏任务和微任务？</p>
+</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>项目介绍</title>
+    <url>/2020/09/28/project/</url>
+    <content><![CDATA[<h1 id="about"><a href="#about" class="headerlink" title="about"></a>about</h1>]]></content>
+  </entry>
+  <entry>
+    <title>react-fontawesome React字体库</title>
+    <url>/2020/10/19/react-fontawesome/</url>
+    <content><![CDATA[<p>Using NPM:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">npm i --save @fortawesome/fontawesome-svg-core \</span><br><span class="line">             @fortawesome/free-solid-svg-icons \</span><br><span class="line">             @fortawesome/react-fontawesome</span><br></pre></td></tr></table></figure>
+
+<p>Add more styles or Pro icons:</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>react hooks讲解</title>
+    <url>/2020/10/11/react-hooks/</url>
+    <content><![CDATA[<p>useEffect和useLayoutEffect的区别</p>
+<h4 id="React-hooks"><a href="#React-hooks" class="headerlink" title="React hooks"></a>React hooks</h4><p>useState: 基本类型 引用类型<br> 基本形式<br>useEffect:<br>useContext:<br>useMemo:<br>useMemo 可以参与渲染过程<br>useEffect 是render之后的过程</p>
+<p><code>useCallback为什么能优化组件性能？</code></p>
+<ol>
+<li>使用useCallback每次都回创建，但是不是每次都会返回<br>useMemo加给回调事件</li>
+</ol>
+<p><code>react组件性能优化的手段：</code></p>
+<ul>
+<li>函数组件优化性能：<br>memo —-&gt;<br>useMemo —-&gt; useCallback</li>
+</ul>
+<ol>
+<li>memo优化不了父组件传入子组件中的回调函数，能优化数据</li>
+<li>通过useMemo —&gt; 返回一个函数去优化传入子组件中的回调</li>
+<li>以上形式可以通过useCallback去简化书写</li>
+</ol>
+<ul>
+<li>class组件性能优化：<ol>
+<li>shoudComponetUpdate</li>
+<li>pureComponent</li>
+</ol>
+</li>
+</ul>
+<p><code>自定义react Hooks</code></p>
+<ol>
+<li>以use开头的一个函数</li>
+<li>复用组件逻辑</li>
+<li>根据组件逻辑返回相应的处理结果</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>二、 React知识点</title>
+    <url>/2020/09/28/react/</url>
+    <content><![CDATA[<h1 id="about"><a href="#about" class="headerlink" title="about"></a>about</h1>]]></content>
+  </entry>
+  <entry>
+    <title>redux-saga 基础知识介绍</title>
+    <url>/2020/10/14/saga/</url>
+    <content><![CDATA[<h4 id="redux-saga-是一个redux中间件：解决异步"><a href="#redux-saga-是一个redux中间件：解决异步" class="headerlink" title="redux-saga 是一个redux中间件：解决异步"></a>redux-saga 是一个redux中间件：解决异步</h4><p>action — store</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//1.  store/index.js</span></span><br><span class="line"><span class="keyword">import</span> createSagaMiddleware <span class="keyword">from</span> <span class="string">&#x27;redux-saga&#x27;</span></span><br><span class="line"><span class="keyword">import</span> mySaga <span class="keyword">from</span> <span class="string">&#x27;./sagas&#x27;</span></span><br><span class="line"><span class="keyword">const</span> sagaMiddleware = createSagaMiddleware();</span><br><span class="line"><span class="keyword">const</span> store = createStore(</span><br><span class="line">  reducer,</span><br><span class="line">  applyMiddleware(sagaMiddleware)</span><br><span class="line">)</span><br><span class="line">sagaMiddleware.run(mySaga)</span><br><span class="line"></span><br><span class="line"><span class="comment">//2.  store/sagas.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; call, put, takeEvery, takeLatest &#125; <span class="keyword">from</span> <span class="string">&#x27;redux-saga/effects&#x27;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">fetchUser</span>(<span class="params">action</span>) </span>&#123; &#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">mySaga</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> takeEvery(<span class="string">&quot;USER_FETCH_REQUESTED&quot;</span>, fetchUser);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 在组件内部通过action进行提交</span></span><br><span class="line">dispatch(actions.testMySaga())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> mySaga;</span><br></pre></td></tr></table></figure>
+<p>查询redux-saga/effects- :相关api</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>typescript 学习笔记</title>
+    <url>/2020/10/23/typescript/</url>
+    <content><![CDATA[<p><code>什么是typescript?</code><br>typescript 是js的超集 [类型]</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="number">8</span>个字：</span><br><span class="line"><span class="number">1.</span> 类型注解 type annotation</span><br><span class="line"><span class="number">2.</span> 类型推断 type inference</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a><strong>环境配置</strong></h3><ol>
+<li><p>typescript<br>npm install -g typescript<br>tsc-v出现版本号说明安装成功</p>
+</li>
+<li><p>ts-node<br>npm install -D ts-node<br>此模块可以减去ts的编译阶段，不用使用tsc demo.ts将ts编译为.js结尾的js文件，而是直接使用ts-node demo.ts直接进行调试。</p>
+</li>
+</ol>
+<h3 id="1-基础语法："><a href="#1-基础语法：" class="headerlink" title="1. 基础语法："></a>1. 基础语法：</h3><p>静态类型：number string boolean null undefined symbol void 可以直观的判断变量或对象的属性和内容是什么</p>
+<h3 id="2-对象类型"><a href="#2-对象类型" class="headerlink" title="2. 对象类型:"></a>2. 对象类型:</h3><p>const teacher: {<br>  name: string;<br>  age: number;<br>} = {<br>  name: ‘lisa’,<br>  age: 29,<br>};<br>const numbers: number[] = [1, 2, 3];<br>class Person {}<br>const person: Person = new Person();<br><strong>ts中的类型可以很方便的给予代码提示</strong></p>
+<p>两个概念：<br>type annotation 类型注解 开发者定义变量类型<br>type inference 类型推断 ts自动分析变量类型</p>
+<p>在ts中最主要功能之一的就是类型校验，在ts开发中尽量要保持每个变量都有已知的类型,手动给变量定义类型就属于类型注解，ts是可以自动推断类型的，自动推断类型就属于类型推断。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> num:number = <span class="number">12</span> <span class="comment">// 类型注解</span></span><br><span class="line"><span class="keyword">const</span> doubleNum = num * <span class="number">2</span> <span class="comment">// 类型推断</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-一般在函数参数中都需要进行类型注解："><a href="#3-一般在函数参数中都需要进行类型注解：" class="headerlink" title="3. 一般在函数参数中都需要进行类型注解："></a>3. 一般在函数参数中都需要进行类型注解：</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTotal</span> (<span class="params">num1:number, num2:number</span>) </span>&#123; <span class="comment">//类型注解</span></span><br><span class="line">    <span class="keyword">return</span> num1 + num2</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> total = getTotal(<span class="number">1</span>, <span class="number">2</span>); <span class="comment">//类型推断</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-函数返回值类型：void-never"><a href="#4-函数返回值类型：void-never" class="headerlink" title="4. 函数返回值类型：void never"></a>4. 函数返回值类型：void never</h3><p>声明一个void类型的变量只能为其赋值null或undefined</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayHello</span>(<span class="params"></span>):<span class="title">void</span></span>&#123; <span class="comment">// void表示函数没有返回值</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-never类型表示的是那些永不存在的值的类型。"><a href="#5-never类型表示的是那些永不存在的值的类型。" class="headerlink" title="5. never类型表示的是那些永不存在的值的类型。"></a>5. never类型表示的是那些永不存在的值的类型。</h4><p>例如，never类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型； 变量也可能是never类型，当它们被永不为真的类型保护所约束时。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">EmitError</span>(<span class="params"></span>):<span class="title">never</span></span>&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;error&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Infinite</span>(<span class="params"></span>):<span class="title">never</span></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 函数参数解构：</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deconstruction</span>(<span class="params">&#123;name,age&#125; : &#123;name:string,age:number&#125;</span>) :<span class="title">string</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;name&#125;</span>今年<span class="subst">$&#123;age&#125;</span>岁了`</span></span><br><span class="line">&#125;</span><br><span class="line">deconstruction(&#123;<span class="attr">name</span>:<span class="string">&#x27;lisa&#x27;</span>,<span class="attr">age</span>:<span class="number">15</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="6-函数参数解构需要想如上函数入参时，进行类型声明"><a href="#6-函数参数解构需要想如上函数入参时，进行类型声明" class="headerlink" title="6. 函数参数解构需要想如上函数入参时，进行类型声明"></a>6. 函数参数解构需要想如上函数入参时，进行类型声明</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> fn = (str:string):<span class="function"><span class="params">number</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">parseInt</span>(str, <span class="number">10</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> fn1: <span class="function">(<span class="params">str : string</span>) =&gt;</span> number = <span class="function">(<span class="params">str</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">parseInt</span>(str, <span class="number">10</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="7-一个变量多个类型："><a href="#7-一个变量多个类型：" class="headerlink" title="7. 一个变量多个类型："></a>7. 一个变量多个类型：</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> temp:number | string = <span class="number">123</span>;</span><br><span class="line">temp = <span class="string">&#x27;lisa&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="8-数组："><a href="#8-数组：" class="headerlink" title="8. 数组："></a>8. 数组：</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> numArr:number[] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">const</span> strArr:string[] = [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>];</span><br><span class="line"><span class="keyword">const</span> arr:(number | string)[] = [<span class="string">&#x27;s&#x27;</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="string">&#x27;aa&#x27;</span>]; <span class="comment">// 数组中多种类型</span></span><br></pre></td></tr></table></figure>
+<h3 id="9-元组：tuple"><a href="#9-元组：tuple" class="headerlink" title="9. 元组：tuple:"></a>9. 元组：tuple:</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> tupleArray:[string, number, string] = [<span class="string">&#x27;lisa&#x27;</span>, <span class="number">12</span>, <span class="string">&#x27;rice&#x27;</span>];</span><br></pre></td></tr></table></figure>
+<p>元组可以理解成长度固定，每一项类型固定的数组。</p>
+<h3 id="10-接口：interface"><a href="#10-接口：interface" class="headerlink" title="10. 接口：interface"></a>10. 接口：interface</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">interface Person &#123;</span><br><span class="line">  name:string;</span><br><span class="line">  age?:number;</span><br><span class="line">  readonly sex:string;</span><br><span class="line">  [propName:string]:any;</span><br><span class="line">  say(a):string</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述接口含义是 name是必选，age可选 sex只可读不可写，[propName:string]:any表示任意属性，say()表示方法属性，返回值为string<br>例子：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">interface Teacher <span class="keyword">extends</span> Person&#123; <span class="comment">// 接口继承</span></span><br><span class="line">    teach():string</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> getName = (person:Teacher):<span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(person.name, person.sex,person.son)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> setName = (person:Person,<span class="attr">name</span>:string):<span class="function"><span class="params">void</span> =&gt;</span> &#123;</span><br><span class="line">    person.name = name</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> dadada = &#123;</span><br><span class="line">    name:<span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    age:<span class="number">2</span>,</span><br><span class="line">    sex:<span class="string">&#x27;male&#x27;</span>,</span><br><span class="line">    son:<span class="string">&#x27;tom&#x27;</span>,</span><br><span class="line">    say()&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;dadada&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    teach()&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;teach&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">setName(dadada,<span class="string">&#x27;lisa&#x27;</span>)</span><br><span class="line">getName(dadada)</span><br></pre></td></tr></table></figure>
+<h3 id="11-类去应用一个接口：implements"><a href="#11-类去应用一个接口：implements" class="headerlink" title="11. 类去应用一个接口：implements"></a>11. 类去应用一个接口：implements</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">interface Person &#123;</span><br><span class="line">  name:string;</span><br><span class="line">  age?:number;</span><br><span class="line">  [propName:string]:any; <span class="comment">// 任意类型</span></span><br><span class="line">  say():string;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lucy</span> <span class="title">implements</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    name = <span class="string">&#x27;sss&#x27;</span></span><br><span class="line">    say()&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;xsxsxs&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> lucy = <span class="keyword">new</span> Lucy();</span><br><span class="line"><span class="built_in">console</span>.log(lucy); <span class="comment">// &#123;name: &#x27;sss&#x27;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="12-ts中的类："><a href="#12-ts中的类：" class="headerlink" title="12. ts中的类："></a>12. ts中的类：</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  name=<span class="string">&quot;lisa&quot;</span>;</span><br><span class="line">  sayName()&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="built_in">super</span>()</span><br><span class="line">    <span class="built_in">this</span>.name = <span class="string">&#x27;jack&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">  sayName()&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">super</span>.sayName() + <span class="string">&#x27;-lisa&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> student = <span class="keyword">new</span> Student();</span><br><span class="line">student.sayName(); <span class="comment">// jack-lisa</span></span><br></pre></td></tr></table></figure>
+<p>在ES6中当子类中的方法覆盖了父类中的方法，但还需要去使用父类的方法，那么就可以使用super去调用</p>
+<p>类中的访问类型和构造器:<br>private：只在当前类中可以使用，不可被继承，不可在子类中访问，子类也不可声明同名属性，实例中也不存在该属性（一句话：只能在当前类的内部访问）<br>protected：与private有一点区别：1.可以在子类中访问，2.不能在实例中访问,但是可以在枚举。</p>
+<p>static：这些属性存在于类本身，而不是类的实例，只能通过类名访问该属性，即使在该类之内也要加上类的名称。可以被子类继承<br>public：默认不写，在当前类中可使用，可以在实例中访问，也可被子类继承。</p>
+<p>构造器新写法：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(public name:string)&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构造器旧写法：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">  name:string</span><br><span class="line">  <span class="keyword">constructor</span>(name:string)&#123;</span><br><span class="line">     <span class="built_in">this</span>.name = name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看一个继承：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">extends</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(public age:number, name:string)&#123;</span><br><span class="line">     <span class="built_in">super</span>(name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> student = <span class="keyword">new</span> Student(<span class="number">12</span>,<span class="string">&#x27;lisa&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(student.name, student.age);</span><br></pre></td></tr></table></figure>
+<h3 id="14-单例模式："><a href="#14-单例模式：" class="headerlink" title="14. 单例模式："></a>14. 单例模式：</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> instance: SingleTon</span><br><span class="line">  createInstance()&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="built_in">this</span>.instance)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.instance = <span class="keyword">new</span> SingleTon()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.instance</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> ins1 = SingleTon.createInstance();</span><br><span class="line"><span class="keyword">let</span> ins2 = SingleTon.createInstance();</span><br><span class="line"><span class="built_in">console</span>.log(ins1 === ins2) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h3 id="15、枚举："><a href="#15、枚举：" class="headerlink" title="15、枚举："></a>15、枚举：</h3><p>enum 枚举类型用于定义数值集合</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">enum Status &#123;</span><br><span class="line">  Html,</span><br><span class="line">  CSS,</span><br><span class="line">  JavaScript</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(Status.CSS); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>如果对enum中的元素赋值：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">enum Status &#123;</span><br><span class="line">  Html,</span><br><span class="line">  CSS = <span class="number">3</span>,</span><br><span class="line">  JavaScript</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(Status.Html); <span class="comment">// 0</span></span><br><span class="line"><span class="built_in">console</span>.log(Status.CSS); <span class="comment">// 3</span></span><br><span class="line"><span class="built_in">console</span>.log(Status.Html); <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="16、泛型（generic）："><a href="#16、泛型（generic）：" class="headerlink" title="16、泛型（generic）："></a>16、泛型（generic）：</h3><p>为了对不确定数据类型进行统一定义那么需要使用泛型</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params">params:string</span>):<span class="title">string</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>fn函数传入一个字符串返回一个字符串，如果要求传入一个数字返回一个数字那么就需要再写一个函数。使用泛型可以解决这个问题。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>&lt;<span class="title">T</span>&gt;(<span class="params">params:T</span>) :<span class="title">T</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数在执行的时候可以传入类型，来定义需要的类型。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>&lt;<span class="title">T</span>&gt;(<span class="params">params:T</span>) :<span class="title">T</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> params;</span><br><span class="line">&#125;</span><br><span class="line">fn&lt;string&gt;(<span class="string">&quot;qwer&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>类中的泛型：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Data</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(private data:T[])&#123;&#125;</span><br><span class="line">    getItem(index)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.data[index]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>泛型继承:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">interface Item&#123;</span><br><span class="line">    name:string</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Data</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Item</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(private data:T[])&#123;&#125;</span><br><span class="line">    getItem(index:number)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.data[index].name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> Data([&#123;<span class="attr">name</span>:<span class="string">&quot;s&quot;</span>&#125;])</span><br><span class="line"><span class="built_in">console</span>.log(a.getItem(<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+<p>泛型还可以继承基础类型:</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Data</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">number</span> | <span class="title">string</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(private data:T[])&#123;&#125;</span><br><span class="line">    getItem(index:number)&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.data[index]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> Data([<span class="number">1</span>,<span class="number">2</span>,<span class="string">&quot;sss&quot;</span>])</span><br><span class="line"><span class="built_in">console</span>.log(a.getItem(<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+<p>命名空间（namespace）：<br>使用命名空间可以解决命名冲突问题<br>使用语法：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">namespace Components&#123;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">aaa</span> </span>&#123;&#125;</span><br><span class="line">  <span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果一个命名空间中的变量需要在外部被访问，那么还需要将它export出去</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">namespace Components&#123;</span><br><span class="line">  <span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">aaa</span> </span>&#123;&#125;</span><br><span class="line">  <span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要在另外一个命名空间中使用Components.aaa</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>umi项目搭建介绍</title>
+    <url>/2020/10/15/umi/</url>
+    <content><![CDATA[<h2 id="一、ui配置路由"><a href="#一、ui配置路由" class="headerlink" title="一、ui配置路由"></a>一、ui配置路由</h2><ol>
+<li><p>全局路由<br>layouts/index.js</p>
+</li>
+<li><p>二级路由</p>
+</li>
+</ol>
+<p>pages/homeIndex/_layout.js  { this.props.children }</p>
+<pre><code> homeindex/user
+ homeindex/detail</code></pre>
+]]></content>
+  </entry>
+  <entry>
+    <title>vue知识点汇总</title>
+    <url>/2020/09/28/vue/</url>
+    <content><![CDATA[<h2 id="什么是MVVM？"><a href="#什么是MVVM？" class="headerlink" title="什么是MVVM？"></a>什么是MVVM？</h2><h2 id="vue2-x数据双向绑定的原理"><a href="#vue2-x数据双向绑定的原理" class="headerlink" title="vue2.x数据双向绑定的原理"></a>vue2.x数据双向绑定的原理</h2><p><code>data为什么要使用函数</code></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">data() &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    msg: <span class="string">&quot;msg&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="vue3-x数据双向绑定的原理"><a href="#vue3-x数据双向绑定的原理" class="headerlink" title="vue3.x数据双向绑定的原理"></a>vue3.x数据双向绑定的原理</h2><h2 id="vue2-x和vue3-x区别"><a href="#vue2-x和vue3-x区别" class="headerlink" title="vue2.x和vue3.x区别"></a>vue2.x和vue3.x区别</h2>]]></content>
+  </entry>
+  <entry>
+    <title>实训标准介绍：</title>
+    <url>/2020/09/28/%E5%AE%9E%E8%AE%AD%E6%A0%87%E5%87%86%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h1 id="about"><a href="#about" class="headerlink" title="about"></a>about</h1>]]></content>
+  </entry>
+  <entry>
+    <title>跨域</title>
+    <url>/2020/10/23/%E8%B7%A8%E5%9F%9F/</url>
+    <content><![CDATA[<h2 id="为什么要跨域？"><a href="#为什么要跨域？" class="headerlink" title="为什么要跨域？"></a>为什么要跨域？</h2><p>因为同源策略；同端口、同协议、同域名的情况下才可以交换数据</p>
+<p>以上三个，但凡有一个不同，就会出现跨域现象；</p>
+<h2 id="如何解决跨域？"><a href="#如何解决跨域？" class="headerlink" title="如何解决跨域？"></a>如何解决跨域？</h2><ol>
+<li><p>前端代理：proxy: { } node-webpack 可以通过proxy代理</p>
+<pre><code> nginx服务器代理（静态资源和反向代理服务器）</code></pre>
+</li>
+<li><p>后端跨域？</p>
+<p>Access-Control-Allow-Origin: ‘http:127.0.0.1:3005’; 允许所有人访问</p>
+<p>cors: { 插件—Access-Control-Allow-Origin: ‘http:127.0.0.1:3005’</p>
+<p>}</p>
+</li>
+</ol>
+]]></content>
+  </entry>
+</search>
